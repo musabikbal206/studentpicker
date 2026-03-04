@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professional Random Picker & Grouper</title>
-    <!-- Tailwind CSS for styling -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter & JetBrains Mono fonts for a clean, corporate/professional look -->
+    <!-- Inter & JetBrains Mono fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -24,20 +24,17 @@
         }
     </script>
     <style>
-        /* Professional, subtle scrollbar */
         textarea::-webkit-scrollbar { width: 6px; }
         textarea::-webkit-scrollbar-track { background: transparent; }
         textarea::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         textarea::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-        /* Subtle transition for generated elements */
         .fade-in { animation: fadeIn 0.3s ease-out forwards; opacity: 0; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Timer alert animation */
         @keyframes pulse-red {
             0%, 100% { color: #ef4444; }
             50% { color: #991b1b; }
@@ -47,14 +44,13 @@
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen">
 
-    <!-- Minimalist Header -->
+    <!-- Header -->
     <header class="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                 <h1 class="text-xl font-bold text-gray-900 tracking-tight">Random Picker & Grouper</h1>
             </div>
-            <!-- Small Timer Widget in Header for constant visibility -->
             <div class="hidden md:flex items-center gap-2 bg-gray-100 px-3 py-1 rounded-lg border border-gray-200">
                 <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <span id="headerTimerDisplay" class="font-mono text-sm font-medium text-gray-700">00:00</span>
@@ -69,7 +65,6 @@
             <section class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">1. Define the Pool</h2>
                 
-                <!-- Tabs for Input Method -->
                 <div class="flex space-x-1 bg-gray-100 p-1 rounded-lg mb-6">
                     <button id="btnTabNames" onclick="switchTab('names')" class="flex-1 py-2 text-sm font-medium rounded-md bg-white shadow-sm text-gray-900 transition-all">
                         Custom Names
@@ -79,7 +74,6 @@
                     </button>
                 </div>
 
-                <!-- Tab Content: Names -->
                 <div id="panelNames" class="space-y-3">
                     <label for="studentList" class="block text-sm font-medium text-gray-700">Roster (Comma separated or newlines)</label>
                     <textarea id="studentList" rows="5" 
@@ -87,15 +81,13 @@
                         placeholder="Alice&#10;Bob&#10;Charlie..."></textarea>
                 </div>
 
-                <!-- Tab Content: Numbers -->
                 <div id="panelNumbers" class="hidden space-y-3">
                     <label for="numberRange" class="block text-sm font-medium text-gray-700">Total Participants</label>
                     <input type="number" id="numberRange" min="1" placeholder="e.g., 30"
                         class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm transition-shadow">
-                    <p class="text-xs text-gray-500">Generates pool from 1 to your total.</p>
                 </div>
 
-                <!-- NEW: Absent/Exclude Section (The Sieve) -->
+                <!-- Exclude Section (The Sieve) -->
                 <div class="mt-6 pt-6 border-t border-gray-100 space-y-3">
                     <label for="excludeList" class="block text-sm font-medium text-gray-700 flex justify-between">
                         <span>Absent / Excluded</span>
@@ -103,23 +95,38 @@
                     </label>
                     <textarea id="excludeList" rows="2" 
                         class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-200 focus:border-red-400 outline-none text-sm transition-shadow resize-y bg-red-50/30"
-                        placeholder="Enter names or numbers to exclude..."></textarea>
-                    <p class="text-xs text-gray-500">Items listed here will be skipped.</p>
+                        placeholder="Enter names/numbers to skip..."></textarea>
                 </div>
 
                 <!-- Pool Status Tracker -->
-                <div class="mt-6 pt-4 border-t border-gray-100 bg-gray-50 rounded-lg p-3 border border-gray-100">
-                    <div class="flex justify-between items-center text-sm mb-1">
-                        <span class="text-gray-500">Total Pool:</span>
-                        <span id="totalCountDisplay" class="font-medium text-gray-700">0</span>
+                <div class="mt-6 pt-4 border-t border-gray-100 bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Live Roster Status</h3>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-gray-500">1. Total on Roster:</span>
+                            <span id="totalCountDisplay" class="font-medium text-gray-700">0</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-gray-500">2. Excluded/Absent:</span>
+                            <span id="excludedCountDisplay" class="font-medium text-red-500">- 0</span>
+                        </div>
+                        
+                        <!-- NEW: The "Discard Pile" Memory -->
+                        <div class="flex justify-between items-center text-sm group">
+                            <span class="text-gray-500 flex items-center gap-1">
+                                3. Already Picked:
+                                <!-- Reset button appears when items are in the discard pile -->
+                                <button onclick="resetPickedHistory()" id="btnResetHistory" class="hidden text-xs bg-gray-200 hover:bg-gray-300 text-gray-700 px-2 py-0.5 rounded transition-colors ml-2">Reset</button>
+                            </span>
+                            <span id="historyCountDisplay" class="font-medium text-amber-600">- 0</span>
+                        </div>
                     </div>
-                    <div class="flex justify-between items-center text-sm mb-2">
-                        <span class="text-gray-500">Excluded:</span>
-                        <span id="excludedCountDisplay" class="font-medium text-red-600">0</span>
-                    </div>
-                    <div class="flex justify-between items-center pt-2 border-t border-gray-200">
-                        <span class="text-sm font-semibold text-gray-800">Active Pool:</span>
-                        <span id="poolCountBadge" class="bg-gray-200 text-gray-600 px-3 py-1 rounded-full text-sm font-bold border border-gray-300">0</span>
+
+                    <!-- The Draw Pile -->
+                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
+                        <span class="text-sm font-bold text-gray-800">Available to Draw:</span>
+                        <span id="poolCountBadge" class="bg-gray-200 text-gray-600 px-3 py-1 rounded-full text-sm font-bold border border-gray-300 transition-colors">0</span>
                     </div>
                 </div>
             </section>
@@ -128,10 +135,9 @@
         <!-- Right Column: Actions, Timer & Results -->
         <div class="col-span-1 lg:col-span-8 space-y-6">
             
-            <!-- NEW: Timer & Actions Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
-                <!-- Timer Card (The Stopwatch) -->
+                <!-- Timer Card -->
                 <section class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
                     <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -143,16 +149,15 @@
                             05:00
                         </div>
                         
-                        <!-- Timer Controls -->
                         <div id="timerSetup" class="flex gap-2 w-full mb-4">
-                            <input type="number" id="timerMinutes" min="0" max="60" value="5" placeholder="Min" class="w-full p-2 border border-gray-300 rounded-md text-center text-sm focus:ring-2 focus:ring-primary-500 outline-none">
-                            <input type="number" id="timerSeconds" min="0" max="59" value="0" placeholder="Sec" class="w-full p-2 border border-gray-300 rounded-md text-center text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+                            <input type="number" id="timerMinutes" min="0" max="60" value="5" class="w-full p-2 border border-gray-300 rounded-md text-center text-sm outline-none focus:border-primary-500">
+                            <input type="number" id="timerSeconds" min="0" max="59" value="0" class="w-full p-2 border border-gray-300 rounded-md text-center text-sm outline-none focus:border-primary-500">
                         </div>
 
                         <div class="flex gap-2 w-full">
                             <button id="btnStartTimer" onclick="startTimer()" class="flex-1 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium py-2 rounded-md transition-colors shadow-sm">Start</button>
                             <button id="btnPauseTimer" onclick="pauseTimer()" class="hidden flex-1 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium py-2 rounded-md transition-colors shadow-sm">Pause</button>
-                            <button onclick="resetTimer()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 rounded-md transition-colors border border-gray-300">Reset</button>
+                            <button onclick="resetTimer()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium py-2 rounded-md border border-gray-300">Reset</button>
                         </div>
                     </div>
                 </section>
@@ -162,36 +167,35 @@
                     <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Choose Action</h2>
                     
                     <div class="space-y-4">
-                        <!-- Action: Pick Individual -->
                         <div class="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors">
-                            <h3 class="font-medium text-gray-900 mb-3 flex items-center gap-2">
+                            <h3 class="font-medium text-gray-900 mb-1 flex items-center gap-2">
                                 <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
                                 Pick Randomly
                             </h3>
+                            <p class="text-xs text-gray-500 mb-3">Draws from available students. Won't repeat until reset.</p>
                             <div class="flex gap-2">
-                                <input type="number" id="pickCount" min="1" placeholder="Qty" class="w-20 p-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none">
-                                <button onclick="handleAction('pick')" class="flex-1 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors shadow-sm active:scale-[0.98]">
+                                <input type="number" id="pickCount" min="1" placeholder="Qty" class="w-20 p-2 border border-gray-300 rounded-md text-sm outline-none focus:border-primary-500">
+                                <button onclick="handleAction('pick')" class="flex-1 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors active:scale-[0.98]">
                                     Pick
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Action: Create Groups -->
                         <div class="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors">
-                            <h3 class="font-medium text-gray-900 mb-3 flex items-center gap-2">
+                            <h3 class="font-medium text-gray-900 mb-1 flex items-center gap-2">
                                 <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                                 Create Groups
                             </h3>
+                            <p class="text-xs text-gray-500 mb-3">Organizes all remaining available students into groups.</p>
                             <div class="flex gap-2">
-                                <input type="number" id="groupCount" min="1" placeholder="Groups" class="w-24 p-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none">
-                                <button onclick="handleAction('group')" class="flex-1 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors shadow-sm active:scale-[0.98]">
+                                <input type="number" id="groupCount" min="1" placeholder="Groups" class="w-24 p-2 border border-gray-300 rounded-md text-sm outline-none focus:border-primary-500">
+                                <button onclick="handleAction('group')" class="flex-1 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors active:scale-[0.98]">
                                     Group
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Error Alert Box -->
                     <div id="errorMessage" class="hidden mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm flex items-start gap-3">
                         <svg class="w-5 h-5 flex-shrink-0 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
                         <span id="errorText" class="font-medium"></span>
@@ -205,9 +209,7 @@
                     <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Results</h2>
                     <span id="resultsTitle" class="text-sm font-medium text-primary-600 bg-primary-50 px-3 py-1 rounded-full"></span>
                 </div>
-                <div id="outputContainer" class="w-full">
-                    <!-- Dynamic content injected here -->
-                </div>
+                <div id="outputContainer" class="w-full"></div>
             </section>
 
         </div>
@@ -215,19 +217,20 @@
 
     <script>
         // --- 1. State Management ---
-        let currentMode = 'names'; // 'names' or 'numbers'
+        let currentMode = 'names'; 
+        
+        // NEW: The "Discard Pile" (Set ensures no duplicate memory entries)
+        let alreadyPicked = new Set(); 
 
-        // Timer State
         let timerInterval = null;
-        let totalSeconds = 300; // Default 5 minutes
+        let totalSeconds = 300; 
         let isRunning = false;
 
-        // DOM Elements
         const studentListEl = document.getElementById('studentList');
         const numberRangeEl = document.getElementById('numberRange');
         const excludeListEl = document.getElementById('excludeList');
         
-        // --- 2. Event Listeners for Live Pool Counting & Timer setup ---
+        // --- 2. Event Listeners ---
         studentListEl.addEventListener('input', updatePoolCount);
         numberRangeEl.addEventListener('input', updatePoolCount);
         excludeListEl.addEventListener('input', updatePoolCount);
@@ -238,6 +241,9 @@
         // --- 3. UI Logic: Tabs ---
         function switchTab(mode) {
             currentMode = mode;
+            // Clear memory when switching modes to prevent confusion
+            resetPickedHistory(false); 
+
             const btnNames = document.getElementById('btnTabNames');
             const btnNumbers = document.getElementById('btnTabNumbers');
             const panelNames = document.getElementById('panelNames');
@@ -258,9 +264,8 @@
             hideError();
         }
 
-        // --- 4. Core Data Retrieval (The Buckets & The Sieve) ---
+        // --- 4. Core Data Retrieval (Buckets, Sieve, & Discard Pile) ---
         
-        // Gets the total pool before filtering
         function getRawPool() {
             if (currentMode === 'names') {
                 const rawText = studentListEl.value;
@@ -272,26 +277,54 @@
             }
         }
 
-        // Applies the sieve: removes excluded items
+        // Now filters BOTH Absentees AND Already Picked students
         function getActivePool() {
             const rawPool = getRawPool();
             const excludeRaw = excludeListEl.value.split(/[\n,]+/).map(n => n.trim()).filter(n => n.length > 0);
-            
-            // Convert to lowercase for robust, case-insensitive comparison
             const excludeLower = excludeRaw.map(n => n.toLowerCase());
             
-            // Filter out items that exist in the excluded list
-            return rawPool.filter(item => !excludeLower.includes(String(item).toLowerCase()));
+            return rawPool.filter(item => {
+                const itemStr = String(item);
+                const isExcluded = excludeLower.includes(itemStr.toLowerCase());
+                const isAlreadyPicked = alreadyPicked.has(itemStr);
+                
+                // Keep only if they are NOT excluded AND NOT already picked
+                return !isExcluded && !isAlreadyPicked;
+            });
         }
 
         function updatePoolCount() {
             const rawPool = getRawPool();
             const activePool = getActivePool();
-            const excludedCount = rawPool.length - activePool.length;
-
-            document.getElementById('totalCountDisplay').textContent = rawPool.length;
-            document.getElementById('excludedCountDisplay').textContent = excludedCount;
             
+            // Calculate sizes based on the logic filters
+            const excludeRaw = excludeListEl.value.split(/[\n,]+/).map(n => n.trim()).filter(n => n.length > 0);
+            const excludeLower = excludeRaw.map(n => n.toLowerCase());
+            
+            let excludedCount = 0;
+            let historyCount = 0;
+
+            rawPool.forEach(item => {
+                const itemStr = String(item);
+                if (excludeLower.includes(itemStr.toLowerCase())) {
+                    excludedCount++;
+                } else if (alreadyPicked.has(itemStr)) {
+                    // Only count them as "Already Picked" if they weren't also excluded
+                    historyCount++; 
+                }
+            });
+
+            // Update UI Counters
+            document.getElementById('totalCountDisplay').textContent = rawPool.length;
+            document.getElementById('excludedCountDisplay').textContent = `- ${excludedCount}`;
+            document.getElementById('historyCountDisplay').textContent = `- ${historyCount}`;
+            
+            // Show/Hide Reset Button for History
+            const btnReset = document.getElementById('btnResetHistory');
+            if (historyCount > 0) btnReset.classList.remove('hidden');
+            else btnReset.classList.add('hidden');
+
+            // Update Draw Pile Badge
             const badge = document.getElementById('poolCountBadge');
             badge.textContent = activePool.length;
 
@@ -303,6 +336,18 @@
                 badge.classList.replace('text-primary-700', 'text-gray-600');
                 badge.classList.replace('bg-primary-50', 'bg-gray-200');
                 badge.classList.remove('border-primary-200');
+            }
+        }
+
+        // NEW: Reset the Discard Pile
+        function resetPickedHistory(showToast = true) {
+            alreadyPicked.clear();
+            updatePoolCount();
+            if (showToast && getRawPool().length > 0) {
+                // Brief visual feedback that it reset
+                const badge = document.getElementById('poolCountBadge');
+                badge.classList.add('scale-110');
+                setTimeout(() => badge.classList.remove('scale-110'), 200);
             }
         }
 
@@ -323,31 +368,40 @@
             
             if (pool.length === 0) {
                 const raw = getRawPool();
-                if (raw.length === 0) return showError(`Please provide ${currentMode === 'names' ? 'some names' : 'a valid total number'} first.`);
-                return showError("All available items have been excluded. The active pool is empty.");
+                if (raw.length === 0) return showError(`Please provide a pool to draw from first.`);
+                return showError("Everyone has either been excluded or already picked! Click 'Reset' under Live Roster Status to start over.");
             }
 
             if (actionType === 'pick') {
                 const pickCount = parseInt(document.getElementById('pickCount').value);
                 if (isNaN(pickCount) || pickCount <= 0) return showError("Enter a valid quantity to pick.");
-                if (pickCount > pool.length) return showError(`Cannot pick ${pickCount}. The active pool only has ${pool.length} items.`);
+                if (pickCount > pool.length) return showError(`Cannot pick ${pickCount}. There are only ${pool.length} remaining to draw.`);
                 
                 const shuffled = shuffleArray(pool);
-                renderPicks(shuffled.slice(0, pickCount));
+                const picks = shuffled.slice(0, pickCount);
+                
+                // ADD TO MEMORY DISCARD PILE
+                picks.forEach(item => alreadyPicked.add(String(item)));
+                
+                renderPicks(picks);
+                updatePoolCount(); // Instantly update the tracker UI
                 
             } else if (actionType === 'group') {
                 const groupCount = parseInt(document.getElementById('groupCount').value);
                 if (isNaN(groupCount) || groupCount <= 0) return showError("Enter a valid number of groups.");
-                if (groupCount > pool.length) return showError(`Cannot create ${groupCount} groups from only ${pool.length} active items.`);
+                if (groupCount > pool.length) return showError(`Cannot create ${groupCount} groups from only ${pool.length} remaining items.`);
 
                 const shuffled = shuffleArray(pool);
                 const groups = Array.from({ length: groupCount }, () => []);
                 
                 shuffled.forEach((item, index) => {
                     groups[index % groupCount].push(item);
+                    // Add grouped students to memory as well, so they aren't drawn again if user switches back to "Pick"
+                    alreadyPicked.add(String(item));
                 });
                 
                 renderGroups(groups);
+                updatePoolCount(); // Update tracker
             }
         }
 
@@ -369,17 +423,17 @@
         }
 
         function renderPicks(items) {
-            document.getElementById('resultsTitle').textContent = `Picked ${items.length} Item${items.length !== 1 ? 's' : ''}`;
+            document.getElementById('resultsTitle').textContent = `Just Picked ${items.length} Item${items.length !== 1 ? 's' : ''}`;
             const container = document.getElementById('outputContainer');
             
             let html = `<div class="flex flex-wrap gap-3">`;
             items.forEach((item, i) => {
                 const isNumber = currentMode === 'numbers';
                 html += `
-                    <div class="fade-in bg-white border border-gray-200 shadow-sm px-4 py-2 rounded-lg flex items-center gap-3" style="animation-delay: ${i * 0.04}s">
+                    <div class="fade-in bg-white border border-primary-200 shadow-md px-5 py-3 rounded-lg flex items-center gap-3 transform hover:-translate-y-1 transition-transform" style="animation-delay: ${i * 0.04}s">
                         ${isNumber ? 
-                            `<span class="text-xl font-bold text-primary-600">#${item}</span>` : 
-                            `<span class="text-sm font-medium text-gray-800">${escapeHTML(item)}</span>`
+                            `<span class="text-2xl font-bold text-primary-600">#${item}</span>` : 
+                            `<span class="text-lg font-medium text-gray-800">${escapeHTML(item)}</span>`
                         }
                     </div>
                 `;
@@ -404,7 +458,7 @@
                         </div>
                         <div class="p-4 flex flex-wrap gap-2">
                             ${group.map(item => `
-                                <span class="inline-block bg-gray-100 text-gray-700 text-sm px-2.5 py-1 rounded-md border border-gray-200">
+                                <span class="inline-block bg-primary-50 text-primary-700 text-sm px-3 py-1.5 rounded-md border border-primary-100 font-medium">
                                     ${currentMode === 'numbers' ? '#' : ''}${escapeHTML(item)}
                                 </span>
                             `).join('')}
@@ -424,7 +478,7 @@
             }[tag]));
         }
 
-        // --- 8. Timer Logic (The Stopwatch) ---
+        // --- 8. Timer Logic ---
         function formatTime(totalSecs) {
             const m = Math.floor(totalSecs / 60).toString().padStart(2, '0');
             const s = (totalSecs % 60).toString().padStart(2, '0');
@@ -437,7 +491,6 @@
             mainDisp.textContent = timeStr;
             document.getElementById('headerTimerDisplay').textContent = timeStr;
 
-            // Flash red when hit 0
             if (totalSeconds === 0 && isRunning) {
                 mainDisp.classList.add('timer-alert');
             } else {
@@ -446,7 +499,7 @@
         }
 
         function syncTimerInputs() {
-            if (isRunning) return; // Prevent changing inputs while running
+            if (isRunning) return; 
             const m = parseInt(document.getElementById('timerMinutes').value) || 0;
             const s = parseInt(document.getElementById('timerSeconds').value) || 0;
             totalSeconds = (m * 60) + s;
@@ -455,14 +508,13 @@
 
         function startTimer() {
             if (isRunning) return;
-            if (totalSeconds <= 0) syncTimerInputs(); // Fetch values if currently 0
-            if (totalSeconds <= 0) return; // Still 0? don't start.
+            if (totalSeconds <= 0) syncTimerInputs(); 
+            if (totalSeconds <= 0) return; 
 
             isRunning = true;
             document.getElementById('btnStartTimer').classList.add('hidden');
             document.getElementById('btnPauseTimer').classList.remove('hidden');
             document.getElementById('timerSetup').classList.add('opacity-50', 'pointer-events-none');
-
             document.getElementById('mainTimerDisplay').classList.remove('timer-alert');
 
             timerInterval = setInterval(() => {
@@ -471,7 +523,7 @@
                     updateTimerDisplay();
                 } else {
                     pauseTimer();
-                    updateTimerDisplay(); // Trigger alert styling
+                    updateTimerDisplay(); 
                 }
             }, 1000);
         }
@@ -486,11 +538,10 @@
 
         function resetTimer() {
             pauseTimer();
-            syncTimerInputs(); // Reset to what's in the input boxes
+            syncTimerInputs(); 
             document.getElementById('mainTimerDisplay').classList.remove('timer-alert');
         }
 
-        // Initialize display
         updateTimerDisplay();
     </script>
 </body>
